@@ -2,29 +2,38 @@
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     // grid-gap: 10px;
-    grid-auto-rows: minmax(100px, auto);
+    // grid-auto-rows: minmax(100px, auto);
+    height: 100vh;
   }
   .main-logo {
     grid-column: 1/2;
     grid-row: 1 / 5;
-    background-color: red;
+    background: rgb(0,0,0);
+    background: linear-gradient(0deg, rgba(0,0,0,1) 25%, rgba(57,5,147,1) 94%); 
     min-width: 200px;
+    position: relative;
+    .logo{
+        width: 150px;
+        margin: 40px auto;
+    }
+    .btn-on{
+        width: 50px;
+        height: 20px;
+        position: absolute;
+        bottom: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
   }
   .main {
     grid-column: 2 / 11;
-    grid-row: 1/5;
-    background-color: bisque;
+    grid-row: 2/5;
   }
-//   .three {
-//     grid-column: 6 / 11;
-//     grid-row: 1 / 5;
-//     background-color: brown;
-//   }
 
-.main{
-    background-color: rgba(45, 0, 88, 0.334);
-}
 .main-nav{
+    grid-column: 2 / 11;
+    grid-row: 1 / 5;
+    background-color: rgba(45, 0, 88, 0.334);
     a{
         color: rgba(45, 0, 88);
         text-decoration: none;
@@ -34,6 +43,7 @@
 .sec-foot{
     background-color: #fff;
     border-radius: 0 20px 0 0 ;
+    height: 100%;
 }
 
 
@@ -45,9 +55,10 @@
     width: 200px;
 }
 .match{
-    margin: 50px;
+    margin: 50px 0 0 50px;
     position: relative;
     padding-top: 10px;
+    // height: 100%;
 }
 
 .pari{
@@ -62,10 +73,23 @@
 
 .one-match{
     display: flex;
+    flex-direction: column;
+    transition: .3s all ease-in-out;
+}
+
+.all-match{
+    display: flex;
+    flex-direction: row;
+    padding-top: 20px;
+    gap: 10px 30px;
+    align-items: center;
+}
+
+.paris-odd{
+    display: flex;
     flex-direction: row;
     gap: 10px 30px;
     align-items: center;
-    padding-top: 20px;
 }
 
 .match-id{
@@ -90,5 +114,51 @@
     }
     p{
         margin: 0;
+    }
+}
+
+
+.img-bc{
+    width: 750px;
+    position: fixed;
+    right: 0;
+    top: 320px;
+    height: 100%;
+    img{
+        display: block;
+        width: 645px;
+    }
+}
+
+.active{
+    bottom: 0;
+    transition: .3s all ease-in-out;
+}
+
+.pop-up{
+    position: fixed;
+    right: 50px;
+    bottom: 0;
+    // bottom: -1000px;
+    .bets{
+        height: 50px;
+        background-color: rgba(45, 0, 88);
+        border-radius: 20px 20px 0 0;
+        color: #fff;
+        text-align: center;
+    }
+    .mes-paris{
+        background-color: #fff;
+        margin: 0;
+        height: 50px;
+        .match-id{
+            margin:0 ;
+        }
+    }
+    .mise{
+        background-color: #bbbbbb;
+        p{
+            margin: 0;
+        }
     }
 }
