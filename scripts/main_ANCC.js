@@ -1,9 +1,7 @@
 // Variiables
 const oneMatch = document.querySelector(".one-match")
-
-
-
-
+const coteTotal = document.querySelector(".total")
+const miseUser = document.querySelector(".mise-user")
 
 // Je crée un tableau avec les images
 const images = ["img/bg1.png", "img/bg2.WEBP", "img/bg3.WEBP"]
@@ -11,11 +9,6 @@ const images = ["img/bg1.png", "img/bg2.WEBP", "img/bg3.WEBP"]
 const randomNumber = Math.floor(Math.random() * images.length)
 const imgElement = document.querySelector(".img-bc img")
 imgElement.src = images[randomNumber]
-
-
-
-
-
 
 // récuperations des données du fichier JSON
 fetch(`scripts/datas.json`)
@@ -29,109 +22,57 @@ fetch(`scripts/datas.json`)
                 <div class="all-match">
                     <p class="match-id" data-matchid ="match_id">${unMatch.hometeam} - ${unMatch.awayteam}</p>
                     <div class="paris-odd">
-                        <button class="btn" data-matchid="${unMatch.match_id}">
+                        <button class="btn" data-matchid="${unMatch.home_odd}">
                             <p class="home-odd"> ${unMatch.home_odd}</p>
                         </button>
-                        <button class="btn" data-matchid="${unMatch.match_id}">
+                        <button class="btn" data-matchid="${unMatch.draw_odd}">
                             <p class="draw-odd">${unMatch.draw_odd}</p>
                         </button>
-                        <button class="btn" data-matchid="${unMatch.match_id}">
+                        <button class="btn" data-matchid="${unMatch.away_odd}">
                             <p class="away-odd">${unMatch.away_odd}</p>
                         </button>
                     </div>
                 </div>        
                 `
             })
+
+            // fuonctions pour mes boutons
+
+            let previousResult = 1; // Variable pour stocker le résultat cumulé
+            const sections = document.querySelectorAll('.paris-odd');
             
-                // fuonctions pour mes boutons
-                let buttons = document.querySelectorAll('.btn');
-                let selectedMatchId;
-                
-                // Sélectionnez les boutons et ajoutez un clic
-                buttons.forEach(button => {
-                    console.log(button.dataset.matchid);
-                button.addEventListener('click', () => {
-                    const currentMatchId = button.dataset.matchid;
-                    if (selectedMatchId === currentMatchId) {
-                    // Si le match est déjà sélectionné, désélectionnez-le
-                    button.classList.remove('selected');
-                    selectedMatchId = null;
-                    } else {
-                    // Si un autre match est sélectionné, désélectionnez-le
-                    if (selectedMatchId) {
-                        const previouslySelectedButtons = document.querySelectorAll(`.paris-odd[data-matchid="${selectedMatchId}"] .btn.selected`);
-                        previouslySelectedButtons.forEach(button => button.classList.remove('selected'));
-                        }
-                        // Sélectionnez le nouveau bouton
-                        button.classList.add('selected');
-                        selectedMatchId = currentMatchId;
-                        // Display the selected button's value (data-matchid) in the console
-                        console.log(`Selected button value (match ID): ${selectedMatchId}`);
-                        }
-                    });
+            sections.forEach(section => {
+                section.addEventListener('click', function(event) {
+                    if (event.target.classList.contains('btn') && event.target.classList.contains('selected')) {
+                        // Déselectionner le bouton cliqué
+                        event.target.classList.remove('selected');
+                        previousResult /= parseFloat(event.target.dataset.matchid);
+                        console.log(`Résultat final : ${previousResult.toFixed(2)}`);
+                        coteTotal.innerHTML = 
+                        `
+                        <p>Cote totale ${previousResult.toFixed(2)}</p>
+                        `
+                    } else if (event.target.classList.contains('btn') && !event.target.classList.contains('selected')) {
+                        // Désélectionner tous les boutons sélectionnés
+                        const buttons = section.querySelectorAll('.btn.selected');
+                        buttons.forEach(button => {
+                            button.classList.remove('selected');
+                        });
+                        // Sélectionner le bouton cliqué
+                        event.target.classList.add('selected');
+                        // Incrémenter le résultat cumulé
+                        const clickedButtonValue = parseFloat(event.target.dataset.matchid);
+                        previousResult *= clickedButtonValue;
+                        console.log(`Résultat final : ${previousResult.toFixed(2)}`);
+                        coteTotal.innerHTML = 
+                        `
+                        <p>Cote totale ${previousResult.toFixed(2)}</p>
+                        `
+                    }
                 });
+            });
         }
-
-
-        // Fonction pour afficher les utilisateur Male
-        // robotsM.addEventListener("click", displayGenderMale)
-        // function displayGenderMale() {
-        //     const maleUsers = data.robots.filter(user => user.gender === 'Male')
-        //     gallery.innerHTML = ''
-        //     maleUsers.forEach(function(singleUser){
-        //         gallery.innerHTML += `
-        //         <img class="user-img" data-userGender="${singleUser.gender}" src="${singleUser.portrait}" title="${singleUser.last_name}">
-        //         `
-        //     })
-        // }
         allMatchs()
     })
     .catch(error => {console.log("Erreur lors de la récup des données :", error);
     })
-
-
-    
-
-
-
-    // ----------- APRES INNERHTML ------------- test
-
-    // Variables
-    const sections = document.querySelectorAll('.paris-odd');
-    const selectedCotes = [];
-    const selectedCotesElement = document.querySelector('.selected-odds');
-
-    // Fonctions
-    function selectOdd(event) {
-    const button = event.target;
-    const matchId = button.dataset.matchid;
-    const oddValue = button.dataset.oddvalue;
-
-    button.classList.add('selected');
-
-    selectedCotes.push({
-        matchId,
-        oddValue,
-    });
-    }
-    function calculateResult() {
-    if (selectedCotes.length === 0) {
-        console.log('Veuillez sélectionner au moins une cote.');
-        return;
-    }
-
-    let result = 1;
-    for (const cote of selectedCotes) {
-        result *= parseFloat(cote.unMatch.home_odd);
-    }
-
-    console.log(`Résultat final : ${result.toFixed(2)}`);
-    }
-    // Ecouteurs d'événements
-    sections.forEach(section => {
-    section.addEventListener('click', selectOdd);
-    });
-    // Ajoute la cote sélectionnée à l'affichage
-    const li = document.createElement('li');
-    li.textContent = `${unMatch.hometeam} (${unMatch.home_odd})`;
-    selectedCotesElement.appendChild(li);
